@@ -70,8 +70,24 @@ try {
 }
 
 /* Check for Valid Token */
+
 /* Log User Out */
+router.post("/logout", async (req, res) => {
+  res.clearCookie("jwt");
+  res.status(200).json({ message: "You have been logged out." });
+});
+
 /* Edit User Details */
+
 /* Delete User */
+// find user by ID and delete
+router.delete("/delete/:id", async (req, res) => {
+  const deletedUser = await User.findByIdAndDelete(req.params.id);
+  res.json(`Deleted user: ${deletedUser.firstName} ${deletedUser.lastName}`);
+});
+try {
+} catch (error) {
+  res.json({ error: error.message });
+}
 
 module.exports = router;
