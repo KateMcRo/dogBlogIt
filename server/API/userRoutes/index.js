@@ -70,6 +70,20 @@ try {
 }
 
 /* Check for Valid Token */
+router.post("/validate", async (req, res) => {
+  try {
+    const token = req.headers.authorization.split(" ")[1]; // split to remove "Bearer"
+    console.log(token);
+    const isValid = await jwt.verify(token, process.env.JWT_SECRET);
+    console.log(isValid);
+    if (!isValid) {
+      res.json({ message: `❌ Invalid Token` }).status(500);
+    }
+    res.json({ message: `✅ Success`, valid: true }).status(200);
+  } catch (error) {
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
 
 /* Log User Out */
 router.post("/logout", async (req, res) => {
@@ -80,7 +94,6 @@ router.post("/logout", async (req, res) => {
 /* Edit User Details */
 
 /* Delete User */
-// find user by ID and delete
 router.delete("/delete/:id", async (req, res) => {
   const deletedUser = await User.findByIdAndDelete(req.params.id);
   res.json(`Deleted user: ${deletedUser.firstName} ${deletedUser.lastName}`);
